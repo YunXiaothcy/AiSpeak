@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (for production)
+  postgres:
+    image: postgres:16-alpine
+    container_name: novelai-forge-db
+    environment:
+      POSTGRES_USER: forge
+      POSTGRES_PASSWORD: forge123
+      POSTGRES_DB: novelaiforge
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U forge"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: novelai-forge-backend
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./backend:/app
+      - ./backend/prompts:/app/backend/prompts
+    environment:
+      DATABASE_URL: postgresql+asyncpg://forge:forge123@postgres/novelaiforge
+      DEBUG: "true"
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GROK_API_KEY: ${GROK_API_KEY:-}
+      CLAUDE_API_KEY: ${CLAUDE_API_KEY:-}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+
+networks:
+  default:
+    name: novelai-forge-network

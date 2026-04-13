@@ -284,9 +284,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**END** ✍️✨
+**Happy writing!** ✍️✨
 
-*Project for experimental ideas. Feel free to improve.❤️*
+*Built with ❤️ for writers everywhere*
 
 </details>
 
@@ -569,8 +569,8 @@ while (true) {
 
 ---
 
-**最后**
+**写作愉快！** ✍️✨
 
-*一个用于实验想法的项目，欢迎完善❤️*
+*为世界各地的作家打造 ❤️*
 
 </details>
